@@ -48,15 +48,15 @@ Note that your new top can still inject the clocks. There's little point, and qu
 
 ## SVA rerun
 
-Assume you have run a regression with a simulation top called cluster_top and saved relevant FSDBs with all or a few levels down recorded. You have now modified an assertion inside cluster_top.block_top.subblock_top, and you would prefer not to rerun the whole cluster just to check it, all the more so since you're not sure of the assertion, and think it might take a few iterations.
+Assume you have run a regression with a simulation top called cluster_top and saved relevant VCD dumps with all or a few levels down recorded. You have now modified an assertion inside cluster_top.block_top.subblock_top, and you would prefer not to rerun the whole cluster just to check it, all the more so since you're not sure of the assertion, and think it might take a few iterations.
 
-To get going quickly you could run your original cluster_top in vcs loading cocotb as a VPI library (assuming you have cocotb installed, this is just a simulator switch). Cocotb will kick off the default wave_rerunner test, which will look for a file containing some parameters on your PYTHONPATH. These parameters include the fsdb you would like to rerun, and the scope that you would like to rerun, which in this case is cluster_top. It will then read all inputs to cluster_top from the FSDB and re-inject them, reproducing the original test result.
+To get going quickly you could run your original cluster_top in your simulator loading cocotb as a VPI library (assuming you have cocotb installed, this is just a simulator switch). Cocotb will kick off the default wave_rerunner test, which will look for a file containing some parameters on your PYTHONPATH. These parameters include the VCD you would like to rerun, and the scope that you would like to rerun, which in this case is cluster_top. It will then read all inputs to cluster_top from the VCD and re-inject them, reproducing the original test result.
 
 This configuration will likely give you a good speed-up already because your testbench is much lighter. However, your RTL is still running in full, when all you really need to run is subblock_top.
 
 To improve that you could tell wave_rerunner to extract and reinject only the inputs to cluster_top, provided that you have logged them in your wave file. You'll do this by specifying ```replay_blocks = ["cluster_top.block_top.subblock_top"]```. This will make wave_rerunner extract signals belonging to this block only, and reinject only those. Now your simulator will likely run much faster because everything except for cluster_top.block_top.subblock_top (and the blocks it drives), is not seeing much activity and hence not taking much simulation time. Still, you'll be running a lot that you're not actually using.
 
-A further improvement would be to load subblock_top as your simulation top. To adapt the path from your FSDB path you could use the wave_prefix configuration argument and set it to: wave_prefix = "cluster_top.block_top". Now wave rerunner will pick the values for cluster_top.block_top.subblock_top inputs (because that is what you specified in replay_blocks), but instead of trying to inject them at cluster_top.block_top.subblock_top.my_input, it will remove the prefix and inject them at subblock_top.my_input. Now you'll be rerunning only subblock_top, which is likely to give an even better speedup.
+A further improvement would be to load subblock_top as your simulation top. To adapt the path from your VCD path you could use the wave_prefix configuration argument and set it to: wave_prefix = "cluster_top.block_top". Now wave rerunner will pick the values for cluster_top.block_top.subblock_top inputs (because that is what you specified in replay_blocks), but instead of trying to inject them at cluster_top.block_top.subblock_top.my_input, it will remove the prefix and inject them at subblock_top.my_input. Now you'll be rerunning only subblock_top, which is likely to give an even better speedup.
 
 You can obtain even faster runtime by creating a module that contains only your assertions, and binding it at runtime into subblock_top. This is not only a generally recommanded pattern for packaging and encapsulating assertions, but would also allow you to rerun without any RTL at all, since you could now simply replay the inputs of the binded assertions block.
 
@@ -78,7 +78,7 @@ TBD
 
 ## SVA rerun
 
-replace *vendor* with your favorite vendor (currently either "snps" or "cdns")
+replace *vendor* with your favorite vendor (currently only "cdns")
 
 ```
 cd examples/[vendor]/setup
@@ -90,7 +90,7 @@ source rerun.csh
 
 ## UVM rerun
 
-replace vendor with your favorite vendor (currently only "snps")
+replace vendor with your favorite vendor (currently only "cdns")
 
 ```
 cd examples/[vendor]/setup

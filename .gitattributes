@@ -1,0 +1,20 @@
+# Normalize all text files to LF in the repository. This eliminates the
+# mixed CRLF/LF state the repo started with, which was breaking `git am`
+# on Windows checkouts.
+* text=auto eol=lf
+
+*.py    text eol=lf
+*.sv    text eol=lf
+*.svh   text eol=lf
+*.csh   text eol=lf
+*.tcl   text eol=lf
+*.cmd   text eol=lf
+*.rc    text eol=lf
+*.tab   text eol=lf
+*.vcd   text eol=lf
+*.md    text eol=lf
+*.patch text eol=lf
+*.diff  text eol=lf
+
+*.png   binary
+*.gif   binary
