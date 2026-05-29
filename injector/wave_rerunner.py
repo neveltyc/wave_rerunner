@@ -27,5 +27,7 @@ async def test_empty(dut):
         previous_time = sim_time
         sim_time = data.get_next_event(sim_time)
         if sim_time == None:
-        	break
-        await Timer(sim_time - previous_time)
+            break
+        # cocotb 2.0 requires an explicit time unit on Timer. Wave timestamps
+        # are replayed as raw simulation steps to stay faithful to the dump.
+        await Timer(sim_time - previous_time, unit="step")

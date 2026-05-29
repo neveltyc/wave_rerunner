@@ -1,7 +1,9 @@
-from cocotb.binary import BinaryValue
+# Adapted to cocotb 2.0 API:
+#   - cocotb.binary.BinaryValue (removed) -> cocotb.types.LogicArray
+#   - handle assignment `sig <= Force(v)` (removed) -> `sig.set(Force(v))`
+#   - cocotb.handle.NonHierarchyIndexableObject (removed) -> no longer imported
+from cocotb.types import LogicArray
 from cocotb.handle import Force
-
-from cocotb.handle import NonHierarchyIndexableObject
 
 from injector.injector_base import InjectorBase
 
@@ -36,19 +38,10 @@ class CocotbInjector(InjectorBase):
 
             coco_sig = self.get_cocotb_sig(sig_name)
 
-            bin_value = BinaryValue(value)
-            # sometimes cocotb sees an object as idexable, but it is just a plain vector? 
-            #if isinstance(coco_sig, NonHierarchyIndexableObject):
-            #    bin_value = [BinaryValue(v) for v in list(value)]
-                #print("skipping list signal: ", sig_name)
-                #continue
-            #else:
-            #    bin_value = BinaryValue(value)
+            bin_value = LogicArray(value)
 
-            #print("assigning sig: ", sig_name)
-    
             try:
-                coco_sig <= Force(bin_value)
+                coco_sig.set(Force(bin_value))
             except ValueError:
                 print("Value error. The values requested to inject are: ", values)
             except TypeError:
