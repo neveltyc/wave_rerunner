@@ -1,6 +1,6 @@
 ﻿# introduction
  
-This repo contains code to read various wave formats (fsdb, shm, vcd, wlf) into python and then reinject selected parts into selected parts of the design. A typical use case for this code would be:
+This repo contains code to read VCD wave files into python and then reinject selected parts into selected parts of the design. A typical use case for this code would be:
 
 * A test takes very long, because it runs a big RTL and testbench
 * You've only changed a UVM checker or an assertion
@@ -13,13 +13,13 @@ The applications in the examples directory, described in detail below, show how 
 
 # structure
 
-* wave/ - contains python modules that read wave files in various formats (fsdb, vcd, shm, wlf) into python data structure. Currently fsdb is fully supported, vcd partially supported, and others are not supported yet. Refer to support matrix for more info.
+* wave/ - contains python modules that read VCD wave files into python data structures. Only VCD is supported; the previous fsdb/shm/wlf stubs have been removed.
 * injector/ - contains python modules to re-inject data from the python data structures back into a design. Also contains a generic cocotb test (wave_rerunner.py) that will take the data read from the wave files, and re-apply it at the given scopes
 * examples/ - examples showing how these capabilities could be applied to common verification tasks such as SVA assertion replay or UVM checkers/coverage replay both without or with only limited part of original RTL
 
 # Operation
 
-wave_rerunner is a special cocotb python test that the user loads during simulation. This test reads wave data (currently FSDB, some VCD, planned SHM) from a user configured file into python data structures. It then re-injects the values read from the wave into a user configured design scope. Note, that unlike some solution available from vendors it *doesn't generate any SV/Verilog code*, but rather uses the original code. Unlike other vendor soutions, it does run a simulation even during rerun, but the simulation is much faster since a lot of the RTL and testbench are removed.
+wave_rerunner is a special cocotb python test that the user loads during simulation. This test reads VCD wave data from a user configured file into python data structures. It then re-injects the values read from the wave into a user configured design scope. Note, that unlike some solution available from vendors it *doesn't generate any SV/Verilog code*, but rather uses the original code. Unlike other vendor soutions, it does run a simulation even during rerun, but the simulation is much faster since a lot of the RTL and testbench are removed.
 
 ## UVM rerun
 
@@ -71,7 +71,7 @@ TBD
 # pre-requisites
 
 * cocotb (currently required for injecting anything back)
-* reading commercial wave formats (fsdb, shm, wlf) requires the matching simulator
+* input wave files must be in VCD format
 * rerunning SVA/UVM requires commercial simulator
 
 # running the examples

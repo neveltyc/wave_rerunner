@@ -1,7 +1,3 @@
-
-class ScopeNotFound(Exception):
-    pass
-
 class ReaderBase:
     def __init__(self, replay_blocks, wave_file, excluded_sigs, inputs_only):     
         self.excluded_sigs = excluded_sigs if excluded_sigs != None else []

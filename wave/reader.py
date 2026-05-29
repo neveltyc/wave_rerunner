@@ -25,7 +25,7 @@ def read_wave():
     wavefile = read_argument('wavefile')
     wave_type = wavefile.split('.')[-1]
 
-    supported_wave_formats = ['vcd', 'fsdb']
+    supported_wave_formats = ['vcd']
 
     if wave_type not in supported_wave_formats:
         raise ValueError("Wavefile type: ", wave_type, " is currently not supported. Supported formats are: ", supported_wave_formats)
@@ -41,8 +41,5 @@ def read_wave():
     if wave_type == 'vcd':
         from wave.vcd_reader import VcdReader
         data = VcdReader(replay_block, wavefile, excluded_sigs, inputs_only)
-    elif wave_type == 'fsdb':
-        from wave.fsdb_reader import FsdbReader
-        data = FsdbReader(replay_block, wavefile, excluded_sigs, inputs_only)
 
     return data     
